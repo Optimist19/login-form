@@ -4,6 +4,7 @@
     <div class="modal" v-if="modal">  
       <div class="input-btn-con">
         <form @submit.prevent="submitForm">
+          <button @click="googleSignIn">Sign in with Google</button>
           <div class="e-p-btn">
             <input type="email" v-model="email" placeholder="Email"/>
             <input type="password" v-model="password" placeholder="Password"/>   
@@ -29,7 +30,8 @@
 <script>
 import {reactive, ref, toRefs} from "vue"
 import app from '../firebase'
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+
 
 export default {
   name: 'LoginModal',
@@ -59,15 +61,66 @@ export default {
           
           const user = userCredential.user;
           isloggedIn.value = true
+          console.log('login is now successful')
           closeModal()
           // ...
           console.log(user)
           alert("Successfully logged in")
+          // form.email = ''
+          // form.password = ''
+
+            form.value = {
+              email: '',
+              password: ''
+            }
+         
         })
         .catch((error) => {
           console.log(error)
           // const errorCode = error.code;
           // const errorMessage = error.message;
+        });
+    }
+
+    function logOut(){
+      const auth = getAuth();
+      signOut(auth).then(() => {
+        // Sign-out successful.
+        console.log("Logged out successful")
+
+      }).catch((error) => {
+        // An error happened.
+        console.log(error)
+
+      });
+    }
+
+
+    function googleSignIn(){
+      const provider = new GoogleAuthProvider();
+      const auth = getAuth();
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          // This gives you a Google Access Token. You can use it to access the Google API.
+          // const credential = GoogleAuthProvider.credentialFromResult(result);
+          // const token = credential.accessToken;
+          // The signed-in user info.
+          const user = result.user;
+          console.log(user)
+
+          alert(`signed in successfully`)
+          // IdP data available using getAdditionalUserInfo(result)
+          // ...
+        }).catch((error) => {
+          console.log(error)
+          // Handle Errors here.
+          // const errorCode = error.code;
+          // const errorMessage = error.message;
+          // The email of the user's account used.
+          // const email = error.customData.email;
+          // The AuthCredential type that was used.
+          // const credential = GoogleAuthProvider.credentialFromError(error);
+          // ...
         });
     }
 
@@ -78,7 +131,8 @@ export default {
       closeModal,
       ...toRefs(form),
       submitForm,
-      // logOut
+      logOut,
+      googleSignIn
     }
   }
  
