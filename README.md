@@ -1,24 +1,4 @@
-# login-form
+# login-modal-form
+The login modal form is a form of practicing firebase authentication. You can sign in with email and also with google.
 
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
